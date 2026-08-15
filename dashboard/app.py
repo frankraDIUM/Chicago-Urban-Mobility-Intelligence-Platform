@@ -527,7 +527,7 @@ st.sidebar.markdown("### System Status")
 status_data = "✓ Spatial dataset loaded" if not comm_areas.empty else " Missing spatial GeoJSON"
 status_model = "✓ Temporal XGBoost loaded" if temporal_model is not None else " Temporal model offline"
 status_ai = (
-            f"✓ AI Analyst connected ({LLM_MODEL})"
+            f"✓ AI Analyst connected"
             if client is not None
             else " Groq API key missing"
         )
