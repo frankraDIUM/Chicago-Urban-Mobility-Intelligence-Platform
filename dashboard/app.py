@@ -16,8 +16,10 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).parent
 
+LLM_MODEL = "openai/gpt-oss-120b"
+
 st.set_page_config(
-    page_title="Chicago Mobility Intelligence Platform",
+    page_title="Chicago Mobility Intelligence",
     layout="wide",
     page_icon="🚕"
 )
@@ -524,7 +526,11 @@ st.sidebar.markdown("### System Status")
 
 status_data = "✓ Spatial dataset loaded" if not comm_areas.empty else " Missing spatial GeoJSON"
 status_model = "✓ Temporal XGBoost loaded" if temporal_model is not None else " Temporal model offline"
-status_ai = "✓ AI Analyst connected" if client is not None else " Groq API key missing"
+status_ai = (
+            f"✓ AI Analyst connected ({LLM_MODEL})"
+            if client is not None
+            else " Groq API key missing"
+        )
 status_map = "✓ Map engine ready"
 
 st.sidebar.markdown(f"""
@@ -692,7 +698,7 @@ Rules you must follow:
                             st.session_state.messages.append({"role": "tool", "name": pending["name"], "content": result, "tool_call_id": "manual"})
 
                             final = client.chat.completions.create(
-                                model="llama-3.3-70b-versatile",
+                                model=LLM_MODEL,
                                 messages=st.session_state.messages + [{"role": "user", "content": "Now give a short analytical explanation of the new result."}],
                                 temperature=0.3
                             )
@@ -717,11 +723,11 @@ Rules you must follow:
                         try:
                             status.write("Evaluating query & selecting appropriate spatial tools...")
                             response = client.chat.completions.create(
-                                model="llama-3.3-70b-versatile",
+                                model=LLM_MODEL,
                                 messages=st.session_state.messages,
                                 tools=TOOLS,
                                 tool_choice="auto",
-                                temperature=0.25
+                                temperature=0.3
                             )
                             msg = response.choices[0].message
 
@@ -765,12 +771,12 @@ Rules you must follow:
 
                                 status.write("Synthesizing analytical findings...")
                                 final = client.chat.completions.create(
-                                    model="llama-3.3-70b-versatile",
+                                    model=LLM_MODEL,
                                     messages=st.session_state.messages + [{
                                         "role": "system",
                                         "content": "Respond with pure natural language only. Do not emit any function calls, XML, or tool syntax."
                                     }],
-                                    temperature=0.35
+                                    temperature=0.3
                                 )
                                 answer = clean_answer(final.choices[0].message.content)
                                 status.update(label="Analysis complete!", state="complete", expanded=False)
@@ -896,7 +902,7 @@ with tab4:
     <div class="workflow-box">
     Sentinel-2 Satellite & POI Data &nbsp;──►&nbsp; Spatial Feature Engineering &nbsp;──►&nbsp; XGBoost Static Model &nbsp;──►&nbsp; Demand Diagnostics<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
-    Groq Llama 3.3 LLM Agent &nbsp;&lt;──►&nbsp; Interactive Folium Map Dashboard &nbsp;&lt;──►&nbsp; Temporal Hourly Model
+    Groq GPT-OSS 120B LLM Agent &nbsp;&lt;──►&nbsp; Interactive Folium Map Dashboard &nbsp;&lt;──►&nbsp; Temporal Hourly Model
     </div>
     """, unsafe_allow_html=True)
 
@@ -991,7 +997,7 @@ with tab4:
 # ----------------------------------------------------------------------
 st.markdown("""
 <div class="app-footer">
-    <b>Chicago Urban Mobility Intelligence Platform v1.0</b><br>
-    Built by Frank G. Asiamah &nbsp;|&nbsp; Python · Streamlit · GeoPandas · XGBoost · Folium · Groq LLM
+    <b>Chicago Urban Mobility Intelligence v1.0</b><br>
+    Built by Frank G. Asiamah &nbsp;|&nbsp; Python · Streamlit · GeoPandas · XGBoost · Folium · GPT-OSS 120B · Groq
 </div>
 """, unsafe_allow_html=True)
