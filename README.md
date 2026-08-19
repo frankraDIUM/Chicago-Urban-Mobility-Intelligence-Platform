@@ -3,7 +3,7 @@ A production-ready geospatial analytics platform that combines satellite imagery
 
 The system integrates multi-source spatial data, static and temporal XGBoost models, interactive mapping, and a tool-using conversational agent into a single Streamlit application.
 
-Access the app here 👉:  https://bit.ly/4wNJQx1
+Access the app here 👉:  https://bit.ly/4wNJQx1  Watch usage video: https://youtu.be/VqZ9-ZvSHDY
 
 ---
 Final platform view
