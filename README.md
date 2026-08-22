@@ -1,7 +1,7 @@
 # 🚕 Chicago Urban Mobility Intelligence Platform
 
 Research title: Chicago Urban Mobility Intelligence: Integrating Satellite Imagery,
-Taxi Trajectory Data, and Machine Learning for Urban Demand Analysis,
+Taxi Trajectory Data, and Machine Learning for Urban Demand Analysis
 
 A production-ready geospatial analytics platform that combines satellite imagery, machine learning, residual diagnostics, and an LLM-powered spatial analyst for urban mobility forecasting in Chicago.
 
