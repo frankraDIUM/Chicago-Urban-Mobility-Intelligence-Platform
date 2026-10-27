@@ -220,7 +220,7 @@ if "selected_area" not in st.session_state:
 if "map_layer" not in st.session_state:
     st.session_state.map_layer = "Total Taxi Trips"
 if "basemap" not in st.session_state:
-    st.session_state.basemap = "CartoDB positron"
+    st.session_state.basemap = "OpenStreetMap"
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "pending_tool" not in st.session_state:
@@ -434,8 +434,8 @@ def build_map(layer: str, basemap: str, highlight_area: str | None = None):
         tiles = "OpenStreetMap"
         attr = "OpenStreetMap"
     else:
-        tiles = "CartoDB positron"
-        attr = "CartoDB"
+        tiles = "OpenStreetMap"
+        attr = "OpenStreetMap"
 
     m = folium.Map(location=[41.8781, -87.6298], zoom_start=11, tiles=tiles, attr=attr)
 
@@ -567,10 +567,10 @@ with tab1:
     with ctrl_right:
         basemap = st.radio(
             "Base Map",
-            ["CartoDB positron", "Satellite", "OpenStreetMap"],
+            ["OpenStreetMap", "Satellite"],
             horizontal=True,
-            index=["CartoDB positron", "Satellite", "OpenStreetMap"].index(st.session_state.basemap)
-            if st.session_state.basemap in ["CartoDB positron", "Satellite", "OpenStreetMap"] else 0
+            index=["OpenStreetMap", "Satellite"].index(st.session_state.basemap)
+            if st.session_state.basemap in ["OpenStreetMap", "Satellite"] else 0
         )
         st.session_state.basemap = basemap
 
@@ -636,14 +636,14 @@ with tab2:
             )
             st.session_state.map_layer = layer_ai
         with mc2:
-            basemap_ai = st.selectbox(
-                "Basemap",
-                ["CartoDB positron", "Satellite", "OpenStreetMap"],
-                index=["CartoDB positron", "Satellite", "OpenStreetMap"].index(st.session_state.basemap)
-                if st.session_state.basemap in ["CartoDB positron", "Satellite", "OpenStreetMap"] else 0,
-                key="ai_basemap"
-            )
-            st.session_state.basemap = basemap_ai
+                basemap_ai = st.selectbox(
+                    "Basemap",
+                    ["OpenStreetMap", "Satellite"],
+                    index=["OpenStreetMap", "Satellite"].index(st.session_state.basemap)
+                    if st.session_state.basemap in ["OpenStreetMap", "Satellite"] else 0,
+                    key="ai_basemap"
+                )
+                st.session_state.basemap = basemap_ai
 
         m_ai = build_map(st.session_state.map_layer, st.session_state.basemap, st.session_state.selected_area)
         ai_map_key = f"ai_map_{st.session_state.selected_area}_{st.session_state.map_version}"
@@ -841,7 +841,7 @@ with tab3:
 
     with col_map_res:
         st.caption("Red = Model Under-predicts (Actual Demand > Predicted) | Blue = Model Over-predicts")
-        m_res = build_map("Residuals", "CartoDB positron", None)
+        m_res = build_map("Residuals", "OpenStreetMap", None)
         st_folium(m_res, use_container_width=True, height=450, returned_objects=[], key="analytics_residuals_map")
 
     with col_tbl_res:
